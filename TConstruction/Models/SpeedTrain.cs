@@ -12,6 +12,6 @@ namespace TConstruction.Models
 
         public string ServiceClass { get; set; }
 
-       
+        public int wagonCount { get; set; }
     }
 }

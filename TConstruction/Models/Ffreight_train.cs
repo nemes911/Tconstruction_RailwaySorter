@@ -11,5 +11,7 @@ namespace TConstruction.Models
         public int max_speed { get; set; }
 
         public string cargo {  get; set; }
+
+        public int wagonCount { get; set; }
     }
 }

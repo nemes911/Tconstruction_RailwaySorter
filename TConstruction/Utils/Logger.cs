@@ -13,12 +13,13 @@ namespace TConstruction.Utils
     {
         private static readonly string logPath = "train_log.json";
 
-        public static void Log(JsonModelLog jsonModelLog)
+        public static void Log(JsonModelLog logEntry)
         {
-            Console.WriteLine($"[{jsonModelLog.date:HH:mm:ss}] {jsonModelLog.name} → {jsonModelLog.operation}");
+            Console.WriteLine($"[{logEntry.date:HH:mm:ss}] {logEntry.name} → {logEntry.operation} ({logEntry.wagonCount} вагонов)");
 
-            var json = System.Text.Json.JsonSerializer.Serialize(jsonModelLog);
+            var json = JsonSerializer.Serialize(logEntry);
             File.AppendAllText(logPath, json + Environment.NewLine);
         }
+
     }
 }
