@@ -10,6 +10,8 @@ namespace TConstruction.Models
     {
         public int max_speed { get; set; }
 
+        public int wagonCount { get; set; }
+
         public int count_peple {  get; set; }
     }
 }

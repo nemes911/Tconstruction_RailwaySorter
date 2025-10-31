@@ -42,12 +42,13 @@ namespace TConstruction
                 if (currentTrain != null)
                 {
                     Logger.Log(new JsonModelLog(
-                    currentTrain.id,
-                    currentTrain.name,
-                    "Left",
-                    DateTime.Now
+     currentTrain.id,
+     currentTrain.name,
+     "Left", // или "Right"
+     DateTime.Now,
+     currentTrain.wagonCount
+ ));
 
-                ));
                 }
             }
         }
@@ -61,12 +62,13 @@ namespace TConstruction
                 if (currentTrain != null)
                 {
                     Logger.Log(new JsonModelLog(
-                    currentTrain.id,
-                    currentTrain.name,
-                    "Right",
-                    DateTime.Now
+    currentTrain.id,
+    currentTrain.name,
+    "Right", // или "Right"
+    DateTime.Now,
+    currentTrain.wagonCount
+));
 
-                ));
                 }
             }
         }
@@ -117,8 +119,7 @@ namespace TConstruction
         }
         private SpeedTrain GenerateRandomTrain()
         {
-            int id = rnd.Next(1000, 9999); // случайный ID от 1000 до 9999
-
+            int id = rnd.Next(1000, 9999);
             string[] names = { "Orion", "Falcon", "Comet", "Vega", "Nova", "Titan", "Echo", "Zephyr" };
             string name = names[rnd.Next(names.Length)];
 
@@ -126,9 +127,11 @@ namespace TConstruction
             {
                 id = id,
                 name = name,
-                speed = 120
+                speed = 120,
+               wagonCount = rnd.Next(1,4) // пока фиксировано, можно сделать rnd.Next(1, 4)
             };
         }
+
 
 
         private async void button1_Click(object sender, EventArgs e)
@@ -142,17 +145,19 @@ namespace TConstruction
                 panel2.Bottom - pictureBox1.Height
             );
 
-            Logger.Log(new JsonModelLog(currentTrain.id, currentTrain.name, "Spawned", DateTime.Now));
+      
 
-            // Сброс подписок
-            timer1.Stop();
             timer1.Tick -= MoveLeft;
             timer1.Tick -= MoveRight;
             timer1.Tick -= timer1_Tick;
             timer1.Tick += timer1_Tick;
-
             timer1.Start();
+
+            // задержка перед разрешением следующего спавна
+            int delayMs = currentTrain.wagonCount * 1000;
+            await Task.Delay(delayMs);
         }
+
 
     }
 }
