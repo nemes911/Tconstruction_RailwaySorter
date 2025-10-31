@@ -32,6 +32,8 @@ namespace TConstruction.Controllers
             Console.WriteLine("Правый путь: " + (tsorter.RightOpen ? "Открыт" : "Закрыт"));
         }
 
+        public bool IsLeftOpen() => tsorter.LeftOpen;
+        public bool IsRightOpen() => tsorter.RightOpen;
 
     }
 }
