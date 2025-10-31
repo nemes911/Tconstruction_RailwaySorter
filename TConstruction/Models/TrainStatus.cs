@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace TConstruction.Models
 {
-    internal class TrainStatus
+    public enum TrainStat
     {
+        InTransit,        // В пути (движется по маршруту)
+        Cancelled,        // Отменён
+        EmergencyStop      // Аварийная остановка
     }
 }
+

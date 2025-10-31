@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace TConstruction.Models
 {
-    internal class Ffreight_train
+    public  class Ffreight_train
     {
+        public int max_speed { get; set; }
+
+        public string cargo {  get; set; }
     }
 }

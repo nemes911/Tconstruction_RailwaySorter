@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace TConstruction.Models
 {
-    internal class SpeedTrain
+    public class SpeedTrain : Train
     {
+        public int max_speed { get; set; }
+
+        public string ServiceClass { get; set; }
+
+
     }
 }

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace TConstruction.Models
 {
-    internal class Passager_Train
+    public class Passager_Train
     {
+        public int max_speed { get; set; }
+
+        public int count_peple {  get; set; }
     }
 }

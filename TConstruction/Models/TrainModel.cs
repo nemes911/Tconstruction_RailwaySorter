@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace TConstruction.Models
 {
-    internal class TrainModel
+    public enum Model
     {
+        Freight,        // Товарный
+        Passenger,      // Пассажирский
+        HighSpeed,      // Высокоскоростной
+        Commuter,       // Пригородный
+        Industrial      // Промышленный (для заводских/шахтных путей)
     }
 }
+
