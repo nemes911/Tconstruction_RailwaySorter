@@ -76,26 +76,61 @@ namespace TConstruction
 
 
 
-        private void timer1_Tick(object sender, EventArgs e)//timer
+        private void StartTrainMovement(PictureBox trainBox)
         {
-            timer1.Stop();
+            var train = (SpeedTrain)trainBox.Tag;
+            var timer = new Timer { Interval = 50 };
 
-            if (controller.IsLeftOpen())
+            timer.Tick += (s, e) =>
             {
-                timer1.Tick -= timer1_Tick;
-                timer1.Tick += MoveLeft;
-                timer1.Start();
-            }
-            else if (controller.IsRightOpen())
+                trainBox.Top -= 2;
+
+                if (trainBox.Top <= panel2.Top)
+                {
+                    timer.Stop();
+
+                    // Решаем направление
+                    if (controller.IsLeftOpen())
+                    {
+                        StartDirectionalMove(trainBox, train, "Left");
+                    }
+                    else if (controller.IsRightOpen())
+                    {
+                        StartDirectionalMove(trainBox, train, "Right");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Обе ветки закрыты, поезд ждёт!");
+                    }
+                }
+            };
+
+            timer.Start();
+        }
+
+        private void StartDirectionalMove(PictureBox trainBox, SpeedTrain train, string direction)
+        {
+            var timer = new Timer { Interval = 50 };
+
+            timer.Tick += (s, e) =>
             {
-                timer1.Tick -= timer1_Tick;
-                timer1.Tick += MoveRight;
-                timer1.Start();
-            }
-            else
-            {
-                MessageBox.Show("Обе ветки закрыты, поезд ждёт!");
-            }
+                if (direction == "Left")
+                    trainBox.Left -= 2;
+                else
+                    trainBox.Left += 2;
+
+                bool reached =
+                    direction == "Left" && trainBox.Left <= panel6.Left ||
+                    direction == "Right" && trainBox.Left >= panel1.Right;
+
+                if (reached)
+                {
+                    timer.Stop();
+                    Logger.Log(new JsonModelLog(train.id, train.name, direction, DateTime.Now, train.wagonCount));
+                }
+            };
+
+            timer.Start();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)//train
@@ -136,27 +171,35 @@ namespace TConstruction
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            currentTrain = GenerateRandomTrain();
+            var train = GenerateRandomTrain();
+            await controller.HandleTrainAsync(train);
 
-            await controller.HandleTrainAsync(currentTrain);
+            var trainBox = CreateTrainVisual(train);
+            StartTrainMovement(trainBox);
 
-            pictureBox1.Location = new Point(
-                panel2.Left - pictureBox1.Width / 2,
-                panel2.Bottom - pictureBox1.Height
-            );
+            Logger.Log(new JsonModelLog(train.id, train.name, "Spawned", DateTime.Now, train.wagonCount));
 
-      
-
-            timer1.Tick -= MoveLeft;
-            timer1.Tick -= MoveRight;
-            timer1.Tick -= timer1_Tick;
-            timer1.Tick += timer1_Tick;
-            timer1.Start();
-
-            // задержка перед разрешением следующего спавна
-            int delayMs = currentTrain.wagonCount * 1000;
-            await Task.Delay(delayMs);
+            await Task.Delay(train.wagonCount * 1000);
         }
+
+        private PictureBox CreateTrainVisual(SpeedTrain train)
+        {
+            var pb = new PictureBox
+            {
+                Width = 20,
+                Height = 20,
+                BackColor = Color.Red,
+                Location = new Point(
+                    panel2.Left - 10,
+                    panel2.Bottom - 20
+                ),
+                Tag = train // сохраняем поезд внутри визуального элемента
+            };
+
+            this.Controls.Add(pb);
+            return pb;
+        }
+
 
 
     }
